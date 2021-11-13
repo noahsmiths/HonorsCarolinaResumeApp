@@ -9,7 +9,7 @@ The Honors Carolina Resume App simply searches resume templates based off key sk
 * Prerequisites
     * Carolina Cloud Apps OpenShift Account
     * Be on UNC's network, either via on Campus or via VPN
-    * [Openshift CLI] (https://docs.openshift.com/container-platform/4.2/cli_reference/openshift_cli/getting-started-cli.html)
+    * [Openshift CLI](https://docs.openshift.com/container-platform/4.2/cli_reference/openshift_cli/getting-started-cli.html)
     * MongoDB Compass
     * NodeJS, latest version is fine
     * ReactJS, global installation
