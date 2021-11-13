@@ -304,7 +304,7 @@ export default function Main() {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Honors Carolina Resume App
                         </Typography>
-                        <Button onClick={(auth || studentAuth) ? logOut : loginOpen} color="inherit">{(auth || studentAuth) ? "Logout" : "Login"}</Button>
+                        <Button onClick={(auth || studentAuth) ? logOut : loginOpen} color="inherit" title="loginButton">{(auth || studentAuth) ? "Logout" : "Login"}</Button>
                     </Toolbar>
                 </AppBar>
                 <Modal open={openModal} onClose={loginClose}>
@@ -416,5 +416,4 @@ export default function Main() {
         </div>
     )
 }
-
 
