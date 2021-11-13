@@ -44,3 +44,5 @@ app.enable('trust proxy');
 app.listen(8080, () => {
     console.log("Server is listening on port 8080");
 });
+
+module.exports = app
