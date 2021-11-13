@@ -80,3 +80,42 @@ The Honors Carolina Resume App simply searches resume templates based off key sk
         termination: edge
         insecureEdgeTerminationPolicy: None
     ```
+
+### Running Your Project Locally
+1. To run the project locally the follwoing things must be done:
+    * Send traffic to MongoDb Over localhost
+    * run the react application over localhost
+    * run the express app over localhost
+2. Send traffic to MongoDb over localhost
+    * Grab your OpenShift cli auth token and login to OpenShift via the CLI
+    * Grab the name of the pod that is running the MongoDb Instance
+    ```
+    oc get pods
+    ```
+    This will return
+    ```
+    NAME                     READY     STATUS       RESTARTS   AGE
+    mongodb-1-XXXXX          1/1       Running      0          12h
+    my-node-app-10-build     0/1       Completed    0          10h
+    ```
+    * Grab the mongodb pod name from the output. From here you can portforward all traffic from Mongo on to a local port
+    ```
+    oc port-forward mongodb-1-XXXXX 34000:27017
+    ```
+    This command will take all traffic from port 27017 on the mongodb pod and route it on localhost:34000
+3. Run the React App
+    * cd into the front end directory
+    * run this command to start the local sever
+    ```
+    npm run start
+    ```
+4. Run the React App
+    * cd into the front end directory
+    * change the mongodb connection string to as follows, in the backend database.config.js
+    ```
+    'mongodb://{username}:{password}@localhost:34000/{dbname}'
+    ```
+    * run this command to start the local sever
+    ```
+    node server.js
+    ```
