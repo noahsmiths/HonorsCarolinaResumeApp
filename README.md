@@ -48,17 +48,17 @@ The Honors Carolina Resume App simply searches resume templates based off key sk
         ```
     * Go back to the topology and click the mongodb pod, from there hit the mongodb service\
         ![Database Service](resources/service.png)
-    * Note the IP of the cluster, and update the IP address of the database connection in this repo under config/database.config.js. Additionaly replace your username and password with the values you entered in earlier. \
+    * Note the IP of the cluster, and update the IP address of the database connection in this repo under config/database.config.js. Additionally replace your username and password with the values you entered in earlier. \
         ![IP Address](resources/ip.png)
         ```
-        'mongodb://{username}:{password}@{ipadress}:27017/{dbname}'
+        'mongodb://{username}:{password}@{ipaddress}:27017/{dbname}'
         ```
     * [MongoDb Connection String Format Docs](https://docs.mongodb.com/manual/reference/connection-string/): This link shows how to format special character in your connection string password
 4. Deploying the ExpressJS API
     * Head to the Topology tab under the Developer view
     * Right click anywhere and select add to project from catalog
     * Search nodeJS and hit the first tile and hit create application
-    * Provide the Github repo link of your forked repo, this repo should contain the updated IP of your mongodb database\
+    * Provide the Github repo link of your back end repo, this repo should contain the updated IP of your mongodb database\
     ![Node Config](resources/nodeconfig.png)
     * Hit Create, click on the newly created pod, and wait for the build to finish
     * Visit the endpoint, by clicking the link on the pod\
@@ -68,3 +68,15 @@ The Honors Carolina Resume App simply searches resume templates based off key sk
     {"welcome":"This is the Honors Carolina Resume App backend ExpressJS API. From here you can CRUD resumes stored in MongoDB."}
     ```
     * Congratulations the backend is now deployed!
+5. Deploying the Front End
+    * Follow all of the same steps for Deploying the Express API, except provide the link for your front end repo instead!
+6. Enable SSL
+    * This step is required to enable HTTPS
+    * Go to the administrator view and go to the Networking Tab
+    * From there find the routes for both your front end and back end node applications
+    * And add the following lines to YAML configuration under the spec section of both routes
+    ```
+    tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: None
+    ```
