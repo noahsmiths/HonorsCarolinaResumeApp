@@ -119,3 +119,49 @@ The Honors Carolina Resume App simply searches resume templates based off key sk
     ```
     node server.js
     ```
+
+## Testing
+
+## Deployment
+* As it stands the production system lives on Carolina Cloud Apps, through student user accounts
+    * Front End: Charles Chow's Carolina Cloud Apps Account
+    * Back End: Rahul Narvekar's Carolina Cloud Apps Account
+* We are currently working with Information Technology Services and with Honors Carolina to obtain a service account to deploy the application to
+* From there we intend to setup a Continuous Integration system enabled on new commits
+* As it stands we are manually triggering new builds on pods after we update our repositories on Github
+
+## Technologies Used
+* Front End: ReactJS
+* Back End: ExpressJS + MongoDB
+* Hosting: Carolina Cloud Apps' based on Redhat's OpenShift Container Platform
+
+## Contributing
+
+### System Accesses
+* A new developer will need to request access to this repository
+* Need access to Carolina Cloud Apps, UNC VPN, and to the OpenShift Service Account when that is created
+
+### Coding Conventions
+* All front and back end code is commented to ensure readability and all files are named according to the same convention
+* The front end has variables for react state handles grouped together by where they are used in the code
+
+[Our project website](https://honors-carolina-resume-app.web.app/)
+
+## Authors
+* Rahul Narvekar: Front End Lead
+* Saurav Bahali: Back End Lead
+* Charles Chow: DevOps Lead
+* Habib Khadri: Project Manager
+* Todd Ginsburg: Group Mentor
+
+## License
+Copyright <2021> <COPYRIGHT Honors Carolina>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Acknowledgements
+Thank you to our mentor Todd Ginsburg, and our client contact Amanda Brumfield for supporting us throughout the initial development of the application.
