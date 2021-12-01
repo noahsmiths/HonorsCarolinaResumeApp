@@ -1,5 +1,8 @@
 module.exports = (app) => {
+
+    // routes
     const resumes = require('../controllers/resume.controller.js');
+    const comments = require('../controllers/comment.controller.js');
 
     // Create a new Resume
     app.post('/resumes', resumes.create);
@@ -15,5 +18,7 @@ module.exports = (app) => {
 
     // Update a Resume with resumeId
     app.put('/resumes/:resumeId', resumes.update);
+
+    app.put('/comment/:resumeId', comments.update)
 
 }

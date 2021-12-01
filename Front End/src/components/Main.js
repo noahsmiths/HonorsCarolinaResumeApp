@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Unauthenticated from "./Unauthenticated";
+import Viewer from "./Viewer";
 import { AppBar, Toolbar, Typography, Modal, Box, TextField, Button, IconButton, FormControlLabel, Checkbox } from "@mui/material";
 import { Home } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -8,7 +9,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { getAll, post, update, del } from "../services/ResumeService";
+import { getAll, post, update, del, get } from "../services/ResumeService";
 
 // Data Grid Toolbar styles
 function escapeRegExp(value) {
@@ -95,7 +96,11 @@ export default function Main() {
     const [openModal, setOpenModal] = React.useState(false);
     const [modalPost, setModalPost] = React.useState(false);
     const openPost = () => setModalPost(true);
-    const closePost = () => setModalPost(false);
+    const closePost = () =>  { setModalPost(false); setPostError(null);  setName(null); setStatus("pending");
+        setLink(null); setMajor(null); setTags(null);};
+    const viewerOpen = () => setResumeViewer(true);
+    const viewerClose = () => setResumeViewer(false);
+    const [resumeViewer, setResumeViewer] = React.useState(false);
 
     //Form value handlers
     const [name, setName] = React.useState(null);
@@ -103,6 +108,7 @@ export default function Main() {
     const [major, setMajor] = React.useState(null);
     const [tags, setTags] = React.useState(null);
     const [status, setStatus] = React.useState("pending");
+    const [postError, setPostError] = React.useState(null);
 
     //Form Submit Actions
     const adminSubmit = () => {
@@ -154,6 +160,7 @@ export default function Main() {
 
     //set last checked row
     const [currentId, setCurrentId] = React.useState(null);
+    const [currentResume, setCurrentResume] = React.useState(null);
 
     //api functions
     const getData = () => {
@@ -194,13 +201,23 @@ export default function Main() {
     const updateResume = () => {
         update(currentId).then(res => {
             setCurrentId(null);
-            getData()
+            getData();
         })
     }
+
+    const viewResume = () => {
+        get(currentId).then(res => {
+            setCurrentResume(res.data);
+            viewerOpen();
+        })
+    }
+
     const postSubmit = () => {
         post(name, link, major, tags, status).then(res => {
             closePost();
             getData();
+        }).catch(e => {
+            setPostError("Please ensure that name, link, major, comma or space separated tags, and appropriate status is set for resumes!");
         })
     }
 
@@ -231,7 +248,7 @@ export default function Main() {
                         variant="contained"
                         size="small"
                         style={{ marginLeft: 16 }}
-                        href={col.value}
+                        onClick={viewResume}
                         target="_blank">View</Button>
                     <Button
                         variant="contained"
@@ -260,7 +277,7 @@ export default function Main() {
                     <Button
                         variant="contained"
                         size="small"
-                        href={col.value}
+                        onClick={viewResume}
                         target="_blank"
                         style={{ marginLeft: 16 }}>View</Button>
                     <Button
@@ -284,7 +301,7 @@ export default function Main() {
             renderCell: (col) => (
                 <strong>
                     <Button
-                        href={col.value}
+                        onClick={viewResume}
                         target="_blank"
                         variant="contained"
                         size="small"
@@ -327,11 +344,15 @@ export default function Main() {
                         {auth && <TextField id="status" label="Approved/Pending" variant="outlined" onInput={e => setStatus(e.target.value)} />}
                         <TextField id="major" label="Major" variant="outlined" onInput={e => setMajor(e.target.value)} />
                         {studentAuth && <FormControlLabel control={<Checkbox checked={privacy} onChange={handleChange} name="privacy" />} label="By checking this box you agree to all privacy policies." />}
+                        {postError && <Typography color="common.red">{postError}</Typography>}
                         {auth && <Button onClick={postSubmit} color="inherit">Post Resume</Button>}
                         {studentAuth && <Button disabled={!privacy} onClick={postSubmit} color="inherit">Post Resume</Button>}
                     </Box>
                 </Modal>
             </header>
+            <Modal open={resumeViewer} onClose={viewerClose}>
+                <Viewer resume={currentResume}></Viewer>
+            </Modal>
             {!auth && !studentAuth && <Unauthenticated></Unauthenticated>}
 
             {/* STUDENT USER VIEW */}
@@ -416,4 +437,5 @@ export default function Main() {
         </div>
     )
 }
+
 

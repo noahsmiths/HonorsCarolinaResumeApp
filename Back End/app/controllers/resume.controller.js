@@ -3,10 +3,30 @@ const Resume = require('../models/resume.model.js');
 // Create and Save a new Resume
 exports.create = (req, res) => {
     // Validate request
-    if(!req.body.name || !req.body.link || !req.body.major || !req.body.tags || !req.body.approved) {
+    if(!req.body.name) {
         return res.status(400).send({
-            message: "Resume contents can not be empty"
+            message: "You must enter in the students name!"
         });
+    }
+    if(!req.body.link) {
+        return res.status(400).send({
+            message: "Resume link can not be empty!"
+        });
+    }
+    if(!req.body.major) {
+        return res.status(400).send({
+            message: "Student major can not be empty!"
+        });
+    }
+    if(!req.body.tags) {
+        return res.status(400).send({
+            message: "Please enter a comma or space separated list of tags!"
+        });
+    }
+    if(!req.body.approved) {
+        return res.status(404).send({
+            message: "Status can only be approved or pending!"
+        })
     }
 
     // Create a Resume
@@ -90,15 +110,9 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body.approved) {
-        return res.status(400).send({
+        return res.status(404).send({
             message: "Resume approved/pending can not be empty"
         });
-    }
-    let approved = String(req.body.approved).toLowerCase()
-    if(approved!='approved' && approved!='pending') {
-        return res.status(400).send({
-            message: "Resume status can only be approved or empty"
-        })
     }
     // Find resume and update it with the request body
     Resume.findByIdAndUpdate(req.params.resumeId, {

@@ -7,7 +7,12 @@ export function getAll() {
 }
 
 export function get(id) {
-    return axios.get(url + id)
+    try{
+        return axios.get(url + id)
+    }
+    catch (err) {
+        return err.response
+    }
 }
 
 export function post(name, link, major, tags, status) {
@@ -28,4 +33,11 @@ export function update(id) {
     return axios.put(url + id, {
             "approved": "approved"
     })
+}
+
+export function newComment(id, commenter, message) {
+    return axios.put("https://honor-carolina-resume-backend-rnarveka.apps.cloudapps.unc.edu/comment/" + id, {
+        "name" : commenter,
+        "comment" : message
+    }) 
 }

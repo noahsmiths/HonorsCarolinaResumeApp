@@ -1,3 +1,3 @@
 module.exports = {
-    url: 'mongodb://{username}:{password}@{ipaddress}/{dbname}'
+    url: 'mongodb://{dbuser}:{dbpass}@{ipadress}:{mongoport}/{dbname}'
 };

@@ -5,7 +5,8 @@ const ResumeSchema = mongoose.Schema({
     link: String,
     major: String,
     tags: String,
-    approved: String
+    approved: String,
+    comments: Array
 }, {
     timestamps: true
 });
