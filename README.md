@@ -121,6 +121,9 @@ The Honors Carolina Resume App simply searches resume templates based off key sk
     ```
 
 ## Testing
+This app uses Jest to test front end and Mocha for backend. Tests can be run with 'npm test'. Currently, there is no dedicated test environment, so tread with caution.
+Add -- --coverage when testing front end for information on code coverage. Backend returns code coverage by default.
+Tests will continue to be added as project expands.
 
 ## Deployment
 * As it stands the production system lives on Carolina Cloud Apps, through student user accounts
@@ -164,4 +167,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Acknowledgements
+<<<<<<< HEAD
 Thank you to our mentor Todd Ginsburg, and our client contact Amanda Brumfield for supporting hroughout the initial development of the application.
+=======
+Thank you to our mentor Todd Ginsburg, and our client contact Amanda Brumfield for supporting us throughout the initial development of the application.
+>>>>>>> b4f134e84288414a027922b5d0b95dbd3c412aca
