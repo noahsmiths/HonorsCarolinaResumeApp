@@ -3,9 +3,9 @@ const Resume = require('../models/resume.model.js');
 // Create and Save a new Resume
 exports.create = (req, res) => {
     // Validate request
-    if(!req.body.name) {
+    if(!req.headers["sn"] || !req.headers["givenname"]) {
         return res.status(400).send({
-            message: "You must enter in the students name!"
+            message: "Name not provided in headers!"
         });
     }
     if(!req.body.link) {
@@ -31,7 +31,7 @@ exports.create = (req, res) => {
 
     // Create a Resume
     const resume = new Resume({
-        name: req.body.name, 
+        name: req.headers["givenname"] + " " + req.headers["sn"], 
         link: req.body.link,
         major: req.body.major,
         tags: req.body.tags,
