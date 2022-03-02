@@ -29,12 +29,16 @@ mongoose.connect(dbConfig.url, {
     process.exit();
 });
 
+app.use(express.static('../Front End/build'));
+
 // define a simple route
+/*
 app.get('/', (req, res) => {
     res.json({
         "welcome" : "This is the Honors Carolina Resume App backend ExpressJS API. From here you can CRUD resumes stored in MongoDB."
     });
 });
+*/
 
 require('./app/routes/resume.routes.js')(app);
 

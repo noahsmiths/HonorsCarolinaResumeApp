@@ -80,14 +80,17 @@ export default function Main() {
     };
     const { privacy } = checkBox;
 
-    // auth values, auth will be true for admin, studentAuth will be true for studentAuth
+    // auth values, auth will be true for admin, studentAuth will be true for studentAuth, superAuth will be true for superUser
     const [auth, setAuth] = React.useState(false);
-    const [studentAuth, setStudentAuth] = React.useState(false);
+    const [studentAuth, setStudentAuth] = React.useState(true);
+    const [superAuth, setSuperAuth] = React.useState(false);
     const logIn = () => { setAuth(true) };
     const studentLogIn = () => { setStudentAuth(true); setStatus("pending"); }
+    const superLogIn = () => { setSuperAuth(true) };
     const logOut = () => {
         setAuth(false);
         setStudentAuth(false);
+        setSuperAuth(false);
     };
 
     //Modal handlers
@@ -95,6 +98,9 @@ export default function Main() {
     const loginClose = () => setOpenModal(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [modalPost, setModalPost] = React.useState(false);
+    const [modalRole, setModalRole] = React.useState(false);
+    const openRoleDashboard = () => setModalRole(true);
+    const closeRoleDashboard = () => setModalRole(false);
     const openPost = () => setModalPost(true);
     const closePost = () =>  { setModalPost(false); setPostError(null);  setName(null); setStatus("pending");
         setLink(null); setMajor(null); setTags(null);};
@@ -121,7 +127,11 @@ export default function Main() {
         loginClose();
         studentLogIn();
     }
-
+    const superSubmit = () => {
+        getUserData();
+        loginClose();
+        superLogIn();
+    }
     //Search function for data grid
     const [searchText, setSearchText] = React.useState('');
     const requestSearch = (searchValue, type) => {
@@ -157,12 +167,39 @@ export default function Main() {
     const [studentApprovedRows, setStudentApprovedRows] = React.useState();
     const [approvedFiltered, setApprovedFiltered] = React.useState(approved);
     const [pendingFiltered, setPendingFiltered] = React.useState(pending);
+    const [users, setRole] = React.useState(null);
 
     //set last checked row
     const [currentId, setCurrentId] = React.useState(null);
     const [currentResume, setCurrentResume] = React.useState(null);
 
+    //Check for affiliation
+    const [ssoRole, setSSORole] = React.useState("");
+
+    React.useEffect(() => {
+        fetch("/user/affiliation")
+        .then(res => res.json())
+        .then((result) => {
+            setSSORole(result.userAffiliation);
+        },
+        (error) => {
+            setSSORole("error");
+            });
+        },
+    []);
+
     //api functions
+    const getUserData = () => {
+        getAll().then(res => {
+            let rows = [];
+            res.data.forEach(element =>{
+                rows.push({id: element._id, role: element._role})
+            });
+        
+        // setRole(rows);
+        setRole([{"id":"62103d57f5d6c38b682beef5","firstName":"Jack","lastName":"Benson","role":1,"roleName":"Student"},{"id":"62103de1f5d6c38b682beef6","firstName":"Ron","lastName":"Johnson","role":2,"roleName":"Reviewer"},{"id":"62103df5f5d6c38b682beef7","firstName":"Foo","lastName":"Barson","role":3,"roleName":"Administrator"},{"id":"62103e10f5d6c38b682beef8","firstName":"Kevin","lastName":"Guskiewicz","role":4,"roleName":"Super User"}])
+        })
+    }
     const getData = () => {
         getAll().then(res => {
             let rowsApproved = [];
@@ -220,7 +257,9 @@ export default function Main() {
             setPostError("Please ensure that name, link, major, comma or space separated tags, and appropriate status is set for resumes!");
         })
     }
-
+    const roleUpdate = () => {
+        closeRoleDashboard();
+    }
     //Data Grid Styling
     const style = {
         position: 'absolute',
@@ -290,7 +329,28 @@ export default function Main() {
         },
         { field: 'tags', headerName: 'Tags', width: 400 }
     ];
+    const columnsUsers = [
+        { field: 'id', headerName: 'ID', width: 100 },
+        {field: 'firstName', headerName: 'FIRST', width: 150},
+        {field: 'lastName', headerName: 'LAST', width: 150},
+        {field: 'role', headerName: 'ROLE', width: 150},
+        {field: 'roleName', headerName: 'CHANGE ROLE', width: 300,
+        renderCell: (col) => (
+            <strong>
+                <Button
+                    variant="contained"
+                    size="small"
+                    style={{ marginLeft: 16 }}
+                    onClick={roleUpdate}>Promote</Button>
+                <Button
+                    variant="contained"
+                    size="small"
+                    style={{ marginLeft: 16 }}
+                    onClick={roleUpdate}>Demote</Button>
+            </strong>
+        )},
 
+    ]
     //Column setup for Student DataGrid
     const studentApproved = [
         { field: 'id', headerName: 'ID', width: 100 },
@@ -312,6 +372,10 @@ export default function Main() {
         { field: 'tags', headerName: 'Tags', width: 400 }
     ];
 
+    React.useEffect(() => {
+        getData();
+    }, []);
+
     return (
         <div>
             <header>
@@ -321,7 +385,7 @@ export default function Main() {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Honors Carolina Resume App
                         </Typography>
-                        <Button onClick={(auth || studentAuth) ? logOut : loginOpen} color="inherit" title="loginButton">{(auth || studentAuth) ? "Logout" : "Login"}</Button>
+                        <Button onClick={(auth || studentAuth) ? logOut : loginOpen} color="inherit" title="loginButton">{(auth || studentAuth) ? `Logout (${ssoRole})` : "Login"}</Button>
                     </Toolbar>
                 </AppBar>
                 <Modal open={openModal} onClose={loginClose}>
@@ -333,6 +397,7 @@ export default function Main() {
                         <TextField id="pass" label="Password" variant="outlined" type="password" />
                         <Button onClick={adminSubmit} color="inherit">Admin</Button>
                         <Button onClick={studentSubmit} color="inherit">Student</Button>
+                        <Button onClick={superSubmit} color="inherit">SuperUser</Button>
                     </Box>
                 </Modal>
                 <Modal open={modalPost} onClose={closePost}>
@@ -342,18 +407,26 @@ export default function Main() {
                         <TextField id="link" label="Resume Link" variant="outlined" onInput={e => setLink(e.target.value)} />
                         <TextField id="tag" label="Tags" variant="outlined" onInput={e => setTags(e.target.value)} />
                         {auth && <TextField id="status" label="Approved/Pending" variant="outlined" onInput={e => setStatus(e.target.value)} />}
+                        {superAuth && <TextField id="status" label="Approved/Pending" variant="outlined" onInput={e => setStatus(e.target.value)} />}
                         <TextField id="major" label="Major" variant="outlined" onInput={e => setMajor(e.target.value)} />
                         {studentAuth && <FormControlLabel control={<Checkbox checked={privacy} onChange={handleChange} name="privacy" />} label="By checking this box you agree to all privacy policies." />}
+
                         {postError && <Typography color="common.red">{postError}</Typography>}
                         {auth && <Button onClick={postSubmit} color="inherit">Post Resume</Button>}
                         {studentAuth && <Button disabled={!privacy} onClick={postSubmit} color="inherit">Post Resume</Button>}
+                    </Box>
+                </Modal>
+                <Modal open={modalRole} onClose={closeRoleDashboard}>
+                    <Box sx={style} component="form">
+                        {postError && <Typography color="common.red">{postError}</Typography>}
+                        {<Button onClick={roleUpdate} color="inherit">Update Role</Button>}
                     </Box>
                 </Modal>
             </header>
             <Modal open={resumeViewer} onClose={viewerClose}>
                 <Viewer resume={currentResume}></Viewer>
             </Modal>
-            {!auth && !studentAuth && <Unauthenticated></Unauthenticated>}
+            {/* !auth && !studentAuth && !superAuth && <Unauthenticated></Unauthenticated> */}
 
             {/* STUDENT USER VIEW */}
             {/* This view will allow students to search resumes, and upload their own */}
@@ -423,6 +496,23 @@ export default function Main() {
                     </div>}
 
             </Box>}
+            {/* SUPERUSER VIEW */}
+            {superAuth && <Box m={6} pl={4} pr={4}>
+            <br></br>
+                <Typography mt={2} mb={2} pb={3} id="modal-modal-title" variant="h6" component="h5">
+                    Users
+                </Typography>
+                {users != null &&
+                    <div style={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={users}
+                            columns={columnsUsers} pageSize={5} owsPerPageOptions={[5]} checkboxSelection
+                            onSelectionModelChange={(id) => { setCurrentId(id[id.length - 1]) }} pb={2}
+                            />
+                    </div>}
+
+            </Box>}
+            
             <footer>
                 <Box bgcolor="#2196f3" color="white" pl={4} pr={4}>
                     <Box ml={2} mr={2} borderBottom={1} p={1}>
